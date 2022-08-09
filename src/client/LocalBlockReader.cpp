@@ -20,6 +20,7 @@
  * limitations under the License.
  */
 #include "BigEndian.h"
+#include "Crc32.h"
 #include "datatransfer.pb.h"
 #include "Exception.h"
 #include "ExceptionInternal.h"
@@ -76,6 +77,9 @@ LocalBlockReader::LocalBlockReader(const shared_ptr<ReadShortCircuitInfo>& info,
             break;
 
         case ChecksumTypeProto::CHECKSUM_CRC32:
+            checksum = std::make_shared<Crc32>();
+            checksumSize = sizeof(int32_t);
+            break;
         case ChecksumTypeProto::CHECKSUM_CRC32C:
             if (HWCrc32c::available()) {
                 checksum = shared_ptr<Checksum>(new HWCrc32c());
